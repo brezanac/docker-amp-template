@@ -1,0 +1,76 @@
+version: '3.2'
+
+services:
+    apache:
+        build:
+            context: .docker/apache
+            dockerfile: Dockerfile
+            args:
+                APACHE_SYSTEM_PACKAGES: "${APACHE_SYSTEM_PACKAGES}"
+                APACHE_MODULES_ENABLED: "${APACHE_MODULES_ENABLED}"
+                APACHE_MODULES_DISABLED: "${APACHE_MODULES_DISABLED}"
+        labels:
+            - traefik.backend=${COMPOSE_PROJECT_NAME}_apache
+            - traefik.docker.network=web-reverse-proxy_public
+            - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.localhost
+            - traefik.port=8080
+        networks:
+            - private
+            - public
+        volumes:
+            - ".docker/apache/apache2.conf:/etc/apache2/apache2.conf:delegated"
+            - "${DOCUMENT_ROOT_HOST_PATH}:${DOCUMENT_ROOT_CONTAINER_PATH}:delegated"
+            - ".docker/apache/vhost.conf:/etc/apache2/sites-enabled/000-default.conf:delegated"
+  
+    php-fpm:
+        build:
+            context: .docker/php-fpm
+            dockerfile: Dockerfile
+            args:
+                PHP_FPM_VERSION: "${PHP_FPM_VERSION}"
+                PHP_FPM_SYSTEM_PACKAGES: "${PHP_FPM_SYSTEM_PACKAGES}"
+                PHP_FPM_PEAR_PACKAGES: "${PHP_FPM_PEAR_PACKAGES}"
+                PHP_FPM_PECL_PACKAGES: "${PHP_FPM_PECL_PACKAGES}"
+                PHP_FPM_COMPOSER_INSTALL: "${PHP_FPM_COMPOSER_INSTALL}"
+        labels:
+            - traefik.enable=false
+        networks:
+            - private
+        volumes:
+            - ".docker/php-fpm/xdebug-cli.ini:/etc/php/${PHP_FPM_VERSION}/cli/conf.d/zzzz_xdebug.ini:delegated"
+            - ".docker/php-fpm/php-cli.ini:/etc/php/${PHP_FPM_VERSION}/cli/conf.d/zzzz_custom.ini:delegated"
+            - ".docker/php-fpm/php.ini:/etc/php/${PHP_FPM_VERSION}/fpm/conf.d/zzzz_custom.ini:delegated"
+            - ".docker/php-fpm/php-fpm.conf:/etc/php/${PHP_FPM_VERSION}/fpm/php-fpm.conf:delegated"
+            - "${DOCUMENT_ROOT_HOST_PATH}:${DOCUMENT_ROOT_CONTAINER_PATH}:delegated"
+            - ".docker/php-fpm/xdebug.ini:/etc/php/${PHP_FPM_VERSION}/fpm/conf.d/zzzz_xdebug.ini:delegated"
+
+    mysql:
+        image: "mysql:${MYSQL_VERSION}"
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        labels:
+            - traefik.enable=false
+        networks:
+            - private
+            - public
+        ports:
+            - published: '5002'
+              target: '3306'
+              protocol: tcp
+              mode: host
+        
+        volumes:
+            - "${MYSQL_DATA_DIR}:/var/lib/mysql"
+            - ".docker/mysql/my.cnf:/etc/mysql/my.cnf:delegated"
+
+networks:
+    private:
+    public:
+        external:
+            name: web-reverse-proxy_public
+
+volumes:
+    mysql-datadir:
