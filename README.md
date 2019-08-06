@@ -13,7 +13,7 @@ The template is heavily based on [Dashtainer](https://github.com/jtreminio/dasht
 ### Cloning the repository ###
 Clone the repository to a place where you want your project to reside. 
 
-**NOTE:** If you are using Windows to clone the repository please take a look at the [troubleshooting section](#troubleshooting) for a potential issue you might have while cloning the repository with Git `core.autocrlf` configured to true.
+**NOTE:** If you are using Windows please take a look at the [troubleshooting section](#troubleshooting) for a potential issue you might have while cloning the repository with Git `core.autocrlf` set to `true`.
 
 ```
 git clone https://github.com/brezanac/docker-amp-template.git my_awesome_project
@@ -57,7 +57,7 @@ cd my_awesome_project
 docker-compose up --build
 ```
 
-If you would like to run the service in the background use the -d (detached) argument.
+If you would like to run the service in the background use the `-d` (detached) argument.
 
 ```
 docker-compose up -d --build
@@ -83,7 +83,7 @@ Docker 17.04.0+ or newer.
 
 ## Mentions
 
-Special thanks go to [jtreminio](https://github.com/jtreminio) and folks at [Freenode](https://freenode.net/) (#docker) which provided valuable insight into some of the trickier aspects of Docker.
+Special thanks go to [jtreminio](https://github.com/jtreminio) for creating [Dashtainer](https://github.com/jtreminio/dashtainer) and folks at [Freenode](https://freenode.net/) (#docker) which provided valuable insight into some of the trickier aspects of Docker.
 
 ## License
 
