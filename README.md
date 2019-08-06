@@ -1,19 +1,21 @@
 # docker-amp-template
 
-A simple Docker Compose template to easily set up web projects that are based on the Apache/MySQL/PHP stack.
+A simple Docker Compose template to easily set up web projects that rely on the Apache/MySQL/PHP stack.
 
 The template is heavily based on [Dashtainer](https://github.com/jtreminio/dashtainer) with changes that focus on:
 
 - centralized configuration - most of the configuration is done by making changes to just one file (`.env`)
 - restructured layout - all Docker related resources are located inside the `.docker` folder, with `docker-compose.yml` being at a more traditional place (project root)
-- data loss protection - by storing volume data on the host, services such as MySQL are protected from accidental data loss through volume purging (prune) etc.
+- data loss protection - by storing volume data on the host, services such as MySQL are protected from accidental data loss through volume pruning etc.
+
+To avoid port management, this template also uses [Traefik](https://traefik.io/) as a reverse proxy by default. However a reverse proxy is not required and with some changes to this template it can be used completely independently.
 
 ## Usage
 
 ### Cloning the repository ###
-Clone the repository to a place where you want your project to reside. 
+Clone the repository to a place where you want your project to be. 
 
-**NOTE:** If you are using Windows please take a look at the [troubleshooting section](#troubleshooting) for a potential issue you might have while cloning the repository with Git `core.autocrlf` set to `true`.
+**NOTE:** If you are using Windows please take a look at the [troubleshooting section](#troubleshooting) for a potential issue you might encounter while cloning the repository with Git `core.autocrlf` set to `true`.
 
 ```
 git clone https://github.com/brezanac/docker-amp-template.git my_awesome_project
@@ -38,15 +40,31 @@ Adjust these to your needs or simply use them as they are:
 * `.docker/php-fpm/xdebug.ini` - Xdebug configuration used for web requests
 * `.docker/php-fpm/xdebug.ini` - Xdebug configuration used for CLI requests
 
-### Creating the reverse proxy network ###
+### Integrating the Traefik reverse proxy ###
 
-In order to prepare the build process for eventual use of the web reverse proxy (Traefik) you need to manually create a Docker network called `web-reverse-proxy`, which will be used for all communication with the reverse proxy service.
+By default Traefik is used as a reverse proxy to route all HTTP/HTTPS requests to appropriate services and avoid port juggling on the host machine.
+
+What this means is that the usual requests like `host:port` (example: `localhost:8080`) can simply be replaced with requests like `project_name.localhost` (example: `docker-amp-template.localhost`).
+
+If you do want to use the reverse proxy please consult [docker-web-reverse-proxy](https://github.com/brezanac/docker-web-reverse-proxy) for instructions on how to set it up first before proceeding.
+
+If you do not want to use the reverse proxy and would rather like to use the standard `host:port` format for requests please perform the following changes to `docker-compose.yml`:
+
+- remove the entire `labels` section from the `apache` service
 
 ```
-docker network create web-reverse-proxy
+labels:
+    - traefik.backend=${COMPOSE_PROJECT_NAME}_apache
+    - traefik.docker.network=web-reverse-proxy_public
+    - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.localhost
 ```
 
-You need to do this **only once**!
+- add a `ports` section to the `apache` service (you can choose the value of the local port but make sure it's not already used)
+
+```
+ports:
+    - "8080:8080"
+```
 
 ### Running docker-compose ###
 
@@ -63,11 +81,11 @@ If you would like to run the service in the background use the `-d` (detached) a
 docker-compose up -d --build
 ```
 
-### Reverse proxy (Traefik) support ###
+### Check if everything is working as expected ###
 
-The template provides full support for [Traefik](https://traefik.io/) which acts as a reverse proxy for request to the service containers.
+Use `COMPOSE_PROJECT_NAME.localhost` (replace `COMPOSER_PROJECT_NAME` with the value from `.env`) in your browser to see if everything is working as expected.
 
-Please take a look at [docker-web-reverse-proxy](https://github.com/brezanac/docker-web-reverse-proxy) for instructions on how to easily combine a reverse web proxy with this template.
+In case of the default value for `COMPOSE_PROJECT_NAME` the URL is `docker-amp-template.localhost`.
 
 ## Troubleshooting ##
 
