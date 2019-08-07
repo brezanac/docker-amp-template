@@ -8,7 +8,7 @@ The template is heavily based on [Dashtainer](https://github.com/jtreminio/dasht
 - restructured layout - all Docker related resources are located inside the `.docker` folder, with `docker-compose.yml` being at a more traditional place (project root)
 - data loss protection - by storing volume data on the host, services such as MySQL are protected from accidental data loss through volume pruning etc.
 
-To avoid port management, this template also uses [Traefik](https://traefik.io/) as a reverse proxy by default. However a reverse proxy is not required and with some changes to this template it can be used completely independently.
+To avoid port management, this template also uses [Traefik](https://traefik.io/) as a reverse proxy by default. However a reverse proxy is not required and with some changes to `docker-compose.yml` it can be used completely independently.
 
 ## Usage
 
@@ -27,11 +27,11 @@ Rename `.env.example` to `.env` and adjust it's values accordingly.
 
 ### Configuring the service configuration files ###
 
-Inside `.docker` folder there are separate folders for each service with configuration files specific for that service.
+The `.docker` folder contains separate folders, each for one of the services with their configuration files.
 
 Adjust these to your needs or simply use them as they are:
 
-* `.docker/apache/apache2.conf` - Apache configuration (usually there is no need to change this one)
+* `.docker/apache/apache2.conf` - Apache configuration (usually there is no need to change this)
 * `.docker/apache/vhost.conf` - decalare all your virtual hosts here
 * `.docker/mysql/my.cnf` - default MySQL server configuration
 * `.docker/php-fpm/php-fpm.conf` - PHP-FPM configuration (don't change unless you really know what you are doing)
