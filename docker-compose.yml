@@ -32,6 +32,8 @@ services:
                 PHP_FPM_PEAR_PACKAGES: "${PHP_FPM_PEAR_PACKAGES}"
                 PHP_FPM_PECL_PACKAGES: "${PHP_FPM_PECL_PACKAGES}"
                 PHP_FPM_COMPOSER_INSTALL: "${PHP_FPM_COMPOSER_INSTALL}"
+        depends_on:
+            - apache
         labels:
             - traefik.enable=false
         networks:
