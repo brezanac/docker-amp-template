@@ -59,8 +59,8 @@ services:
             - private
             - public
         ports:
-            - published: '5002'
-              target: '3306'
+            - published: "${MYSQL_PUBLISHED_PORT}"
+              target: 3306
               protocol: tcp
               mode: host
         
