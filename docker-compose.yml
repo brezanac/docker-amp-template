@@ -2,6 +2,7 @@ version: '3.2'
 
 services:
     apache:
+        container_name: "${COMPOSE_PROJECT_NAME}_apache"
         build:
             context: .docker/apache
             dockerfile: Dockerfile
@@ -23,6 +24,7 @@ services:
             - ".docker/apache/vhost.conf:/etc/apache2/sites-enabled/000-default.conf:delegated"
   
     php-fpm:
+        container_name: "${COMPOSE_PROJECT_NAME}_php-fpm"
         build:
             context: .docker/php-fpm
             dockerfile: Dockerfile
@@ -47,6 +49,7 @@ services:
             - ".docker/php-fpm/xdebug.ini:/etc/php/${PHP_FPM_VERSION}/fpm/conf.d/zzzz_xdebug.ini:delegated"
 
     mysql:
+        container_name: "${COMPOSE_PROJECT_NAME}_mysql"
         image: "mysql:${MYSQL_VERSION}"
         environment:
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}

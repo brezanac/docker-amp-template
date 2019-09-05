@@ -95,6 +95,16 @@ If you are using Windows and your Git configuration is set to automatically repl
 
 In that case please use an editor like [VS Code](https://code.visualstudio.com/) to manually open the files, change their line endings from `CRLF` (`\r\n`) to `LF` (`\n`) and save them.
 
+### Communicating between containers ###
+
+In order for Docker containers to be able to communicate with each other when they are part of a custom Docker network, all requests need to use container names as target host names ([details](https://docs.docker.com/v17.09/engine/userguide/networking/configure-dns/)).
+
+For example, if you want to access the `mysql` container from within your PHP code (`php-fpm`) you need to use the name of the running `mysql` container as host name.
+
+In order to simplify usage this template explicitely sets names for all running containers. This however comes at a cost of not being able to scale the running containers, simply because there is no way to run two containers with the same name at the same time.
+
+If you wish to remove this limitation and don't mind the dynamically named containers just remove all `container_name` lines from `docker-compose.yml`.
+
 ## Requirements
 
 Docker 17.04.0+ or newer.
