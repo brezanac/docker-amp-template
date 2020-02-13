@@ -1,77 +1,164 @@
 # docker-amp-template
 
-A simple Docker Compose template to easily set up web projects that rely on the Apache/MySQL/PHP stack.
+A simple Docker template to easily set up web projects that rely on the Apache/MySQL/PHP stack, with a fully integrated [Traefik](https://traefik.io/) reverse proxy.
 
-The template is heavily based on [Dashtainer](https://github.com/jtreminio/dashtainer) with changes that focus on:
+## Major changes in version 2.0
 
-- centralized configuration - most of the configuration is done by making changes to just one file (`.env`)
-- restructured layout - all Docker related resources are located inside the `.docker` folder, with `docker-compose.yml` being at a more traditional place (project root)
-- data loss protection - by storing volume data on the host, services such as MySQL are protected from accidental data loss through volume pruning etc.
+### New base image ###
 
-To avoid port management, this template also uses [Traefik](https://traefik.io/) as a reverse proxy by default. However a reverse proxy is not required and with some changes to `docker-compose.yml` it can be used completely independently.
+Due to the removal of the original `blitznote/debase` image from Docker Hub, [brezanac/apt-image](https://hub.docker.com/repository/docker/brezanac/apt-image) is now used as a stand-in replacement.
+
+The `brezanac/apt-image` image is based entirely on the original source code of `blitznote/debase` and is generated automatically by Docker Hub from a forked [repository](https://github.com/brezanac/apt-image) on GitHub.
+
+### Integrated Traefik 2.0  ###
+
+Traefik 2.0 is now fully integrated into the template and can be run manually, if required.
+
+For more details please see the instructions [here](#integrating-traefik-reverse-proxy).
+
+### New folder structure ###
+
+In order to integrate the template more easily into existing projects the folder structure has been modified, allowing it to be used from a completely independent location or as part of a git submodule.
+
+### Removed public folder ###
+
+The document root (`./public`) is no longer part of the template and is by default considered to be located one level above the template folder (`../public`).
 
 ## Usage
 
+### The TLDR version please ###
+
+The shortened version or all the steps required to use this template (explained line by line):
+
+* `[optional]` create the main project folder (skip if one already exists)
+* step into the main project folder
+* `[optional]` initialize an empty git repository (skip if the project is already versioned by git)
+* add the template repo as a git submodule (current folder **needs** to be a git repository too!)
+* initialize the template submodule
+* update the template submodule with required dependencies
+*  `[optional]` create a public folder (skip if one already exists)
+* step into the submodule folder
+* `[optional` run the integrated Traefik 2.0 reverse proxy (skip if you already have another Traefik instance running)
+* run the actual template services
+
+```
+mkdir my-awesome-project
+cd my-awesome-project
+git init
+git submodule add https://github.com/brezanac/docker-amp-template.git .docker
+git submodule init
+git submodule update
+mkdir public
+cd .docker
+docker-compose -f docker-compose.traefik.yml -p traefik_reverse_proxy up --build -d
+docker-compose up --build
+```
+
 ### Cloning the repository ###
-Clone the repository to a place where you want your project to be. 
 
-**NOTE:** If you are using Windows please take a look at the [troubleshooting section](#troubleshooting) for a potential issue you might encounter while cloning the repository with Git `core.autocrlf` set to `true`.
+Clone the repository to a location of your choosing.
 
 ```
-git clone https://github.com/brezanac/docker-amp-template.git my_awesome_project
+git clone https://github.com/brezanac/docker-amp-template.git .docker
 ```
 
-### Configuring the environmental variables file (.env) ###
+You can also add the repository as a git submodule to an already existing project that uses git.
+
+```
+git submodule add https://github.com/brezanac/docker-amp-template.git .docker
+```
+
+Please note that if you use the git submodule method you will **need to initialize your submodules** after cloning the repository that has this template as a git submodule.
+
+You can initialize the submodules automatically during the cloning process (replace `REPOSITORY_LOCATION` with the actual URL or local path to the repository).
+
+```
+git clone REPOSITORY_LOCATION my-awesome-project --recurse-submodules
+```
+
+Alternatively you can also initialize the submodules manually.
+
+```
+git clone REPOSITORY_LOCATION my-awesome-project
+git submodule init
+git submodule update
+```
+
+### Configuring the environmental variables file ###
 
 Rename `.env.example` to `.env` and adjust it's values accordingly. 
 
 ### Configuring the service configuration files ###
 
-The `.docker` folder contains separate folders, each for one of the services with their configuration files.
+The service folders (`apache`, `php-fpm`, `mysql`) contain files required to build and configure the service images.
 
-Adjust these to your needs or simply use them as they are:
+Please adjust these to your needs or simply use them as they are:
 
-* `.docker/apache/apache2.conf` - Apache configuration (usually there is no need to change this)
-* `.docker/apache/vhost.conf` - decalare all your virtual hosts here
-* `.docker/mysql/my.cnf` - default MySQL server configuration
-* `.docker/php-fpm/php-fpm.conf` - PHP-FPM configuration (don't change unless you really know what you are doing)
-* `.docker/php-fpm/php.ini` - `php.ini` used for web requests
-* `.docker/php-fpm/php-cli.ini` - `php.ini` used for CLI requests
-* `.docker/php-fpm/xdebug.ini` - Xdebug configuration used for web requests
-* `.docker/php-fpm/xdebug.ini` - Xdebug configuration used for CLI requests
+* `apache/apache2.conf` - default apache configuration (usually there is no need to change any of this)
+* `apache/vhost.conf` - a place to decalare all your virtual hosts here
+* `mysql/my.cnf` - MySQL server configuration
+* `php-fpm/php-fpm.conf` - php-fpm configuration (don't change unless you really know what you are doing)
+* `php-fpm/php.ini` - `php.ini` used for web requests
+* `php-fpm/php-cli.ini` - `php.ini` used for CLI requests
+* `php-fpm/xdebug.ini` - Xdebug configuration for web requests
+* `php-fpm/xdebug.ini` - Xdebug configuration for CLI requests
 
-### Integrating the Traefik reverse proxy ###
+**DO NOT** make changes to files that are not listed above unless you really know what you are doing.
 
-By default Traefik is used as a reverse proxy to route all HTTP/HTTPS requests to appropriate services and avoid port juggling on the host machine.
+### Integrating Traefik reverse proxy ###
 
-What this means is that the usual requests like `host:port` (example: `localhost:8080`) can simply be replaced with requests like `project_name.localhost` (example: `docker-amp-template.localhost`).
+[Traefik](https://containo.us/traefik/) is a reverse proxy used to automatically route all HTTP and TCP connections to appropriate Docker containers. 
 
-If you do want to use the reverse proxy please consult [docker-web-reverse-proxy](https://github.com/brezanac/docker-web-reverse-proxy) for instructions on how to set it up first before proceeding.
+It also removes the need for *port juggling*, which means that instead of making requests like `localhost:8080` Traefik will allow you to use `docker-amp-template.localhost` which will be routed to the appropriate Docker container.
 
-If you do not want to use the reverse proxy and would rather like to use the standard `host:port` format for requests please perform the following changes to `docker-compose.yml`:
+To run Traefik please switch to your freshly cloned folder (assumed `.docker`) and run the following command:
 
-- remove the entire `labels` section from the `apache` service
+```
+cd .docker
+docker-compose -f docker-compose.traefik.yml -p traefik_reverse_proxy up --build -d
+```
+
+This will build and run a new instance of Traefik in the background named `traefik_reverse_proxy`.
+
+Please note that you need to run the command **only once** and **only** if you don't already have another Traefik instance that you will be using. 
+
+You can use the same instance of Traefik for **all your projects** if you want to.
+
+To stop Traefik use one of the following two methods (the first one is preferred since it will also prune the generated container and network).
+
+```
+docker-compose -f docker-compose.traefik.yml -p traefik_reverse_proxy down
+```
+
+```
+docker container stop traefik_reverse_proxy
+```
+
+If, for whatever reason, you do not want to use Traefik at all please make the following adjustments to `docker-compose.yml`:
+
+* set `traefik.enable` value to `false` inside the `labels` section for the `apache` service
 
 ```
 labels:
-    - traefik.backend=${COMPOSE_PROJECT_NAME}_apache
-    - traefik.docker.network=web-reverse-proxy_public
-    - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.localhost
+    - "traefik.enable=false"
+    - "traefik.docker.network=${TRAEFIK_NETWORK_NAME}"
+    - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=web"
+    - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_PROJECT_NAME}.${TRAEFIK_HOSTNAME}`)"
 ```
 
-- add a `ports` section to the `apache` service (you can choose the value of the local port but make sure it's not already used)
+* add a `ports` section to the `apache` service (you can choose the value of the local port but make sure it's not already in use)
 
 ```
 ports:
     - "8080:8080"
 ```
 
-### Running docker-compose ###
+### Running the actual template ###
 
-Run Docker Compose within the newly created folder.
+After cloning the repository move into the cloned folder (assumed `.docker`) and run `docker-compose` like in the following example.
 
 ```
-cd my_awesome_project
+cd .docker
 docker-compose up --build
 ```
 
@@ -89,29 +176,21 @@ In case of the default value for `COMPOSE_PROJECT_NAME` the URL is `docker-amp-t
 
 ## Troubleshooting ##
 
-### Checking out the repository on Windows with Git core.autocrlf option set to true ###
-
-If you are using Windows and your Git configuration is set to automatically replace line endings in cloned repository files with `\r\n` (`core.autocrlf` is set to `true`), some of the files from the template, that are meant to be executed within the container, might fail to do so and the build process will fail.
-
-In that case please use an editor like [VS Code](https://code.visualstudio.com/) to manually open the files, change their line endings from `CRLF` (`\r\n`) to `LF` (`\n`) and save them.
-
-### Communicating between containers ###
+### Communication between containers ###
 
 In order for Docker containers to be able to communicate with each other when they are part of a custom Docker network, all requests need to use container names as target host names ([details](https://docs.docker.com/v17.09/engine/userguide/networking/configure-dns/)).
 
-For example, if you want to access the `mysql` container from within your PHP code (`php-fpm`) you need to use the name of the running `mysql` container as host name.
+For example, if you would like to access the `mysql` container from within your PHP code (`php-fpm`) you need to use the name of the running `mysql` container as host name. Since Docker prefixes all service names with the `COMPOSE_PROJECT_NAME` value the actual host name of the `mysql` container would be  `docker-amp-template_mysql`.
 
 In order to simplify usage this template explicitely sets names for all running containers. This however comes at a cost of not being able to scale the running containers, simply because there is no way to run two containers with the same name at the same time.
 
-If you wish to remove this limitation and don't mind the dynamically named containers just remove all `container_name` lines from `docker-compose.yml`.
+If you wish to remove this limitation and don't mind the dynamically named containers just remove all `container_name` lines from `docker-compose.yml` and the `COMPOSE_PROJECT_NAME` line from `.env`.
 
 ## Requirements
 
-Docker 17.04.0+ or newer.
+The template itself requires Docker `17.04.0` (`Compose 3.2`) or newer. 
 
-## Mentions
-
-Special thanks go to [jtreminio](https://github.com/jtreminio) for creating [Dashtainer](https://github.com/jtreminio/dashtainer) and folks at [Freenode](https://freenode.net/) (#docker) which provided valuable insight into some of the trickier aspects of Docker.
+However, in order to run the integrated Traefik you will need Docker `17.14.0` (`Compose version 3.5`) or higher.
 
 ## License
 

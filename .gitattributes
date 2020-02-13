@@ -1,0 +1,9 @@
+*               text=auto
+*.bash          text eol=lf
+*.bat           text eol=crlf
+*-bin           text eol=lf
+*.conf          text eol=lf
+*.ini           text
+*.yml           text
+.env            text
+Dockerfile      text

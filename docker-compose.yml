@@ -4,29 +4,29 @@ services:
     apache:
         container_name: "${COMPOSE_PROJECT_NAME}_apache"
         build:
-            context: .docker/apache
+            context: ./apache
             dockerfile: Dockerfile
-            args:
+            args: 
                 APACHE_SYSTEM_PACKAGES: "${APACHE_SYSTEM_PACKAGES}"
                 APACHE_MODULES_ENABLED: "${APACHE_MODULES_ENABLED}"
                 APACHE_MODULES_DISABLED: "${APACHE_MODULES_DISABLED}"
         labels:
-            - traefik.backend=${COMPOSE_PROJECT_NAME}_apache
-            - traefik.docker.network=web-reverse-proxy_public
-            - traefik.frontend.rule=Host:${COMPOSE_PROJECT_NAME}.localhost
-            - traefik.port=8080
+            - "traefik.enable=true"
+            - "traefik.docker.network=${TRAEFIK_NETWORK_NAME}"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.entrypoints=web"
+            - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_PROJECT_NAME}.${TRAEFIK_HOSTNAME}`)"
         networks:
             - private
             - public
         volumes:
-            - ".docker/apache/apache2.conf:/etc/apache2/apache2.conf:delegated"
+            - "./apache/apache2.conf:/etc/apache2/apache2.conf:delegated"
             - "${DOCUMENT_ROOT_HOST_PATH}:${DOCUMENT_ROOT_CONTAINER_PATH}:delegated"
-            - ".docker/apache/vhost.conf:/etc/apache2/sites-enabled/000-default.conf:delegated"
+            - "./apache/vhost.conf:/etc/apache2/sites-enabled/000-default.conf:delegated"
   
     php-fpm:
         container_name: "${COMPOSE_PROJECT_NAME}_php-fpm"
         build:
-            context: .docker/php-fpm
+            context: php-fpm
             dockerfile: Dockerfile
             args:
                 PHP_FPM_VERSION: "${PHP_FPM_VERSION}"
@@ -36,17 +36,15 @@ services:
                 PHP_FPM_COMPOSER_INSTALL: "${PHP_FPM_COMPOSER_INSTALL}"
         depends_on:
             - apache
-        labels:
-            - traefik.enable=false
         networks:
             - private
         volumes:
-            - ".docker/php-fpm/xdebug-cli.ini:/etc/php/${PHP_FPM_VERSION}/cli/conf.d/zzzz_xdebug.ini:delegated"
-            - ".docker/php-fpm/php-cli.ini:/etc/php/${PHP_FPM_VERSION}/cli/conf.d/zzzz_custom.ini:delegated"
-            - ".docker/php-fpm/php.ini:/etc/php/${PHP_FPM_VERSION}/fpm/conf.d/zzzz_custom.ini:delegated"
-            - ".docker/php-fpm/php-fpm.conf:/etc/php/${PHP_FPM_VERSION}/fpm/php-fpm.conf:delegated"
+            - "./php-fpm/xdebug-cli.ini:/etc/php/${PHP_FPM_VERSION}/cli/conf.d/zzzz_xdebug.ini:delegated"
+            - "./php-fpm/php-cli.ini:/etc/php/${PHP_FPM_VERSION}/cli/conf.d/zzzz_custom.ini:delegated"
+            - "./php-fpm/php.ini:/etc/php/${PHP_FPM_VERSION}/fpm/conf.d/zzzz_custom.ini:delegated"
+            - "./php-fpm/php-fpm.conf:/etc/php/${PHP_FPM_VERSION}/fpm/php-fpm.conf:delegated"
             - "${DOCUMENT_ROOT_HOST_PATH}:${DOCUMENT_ROOT_CONTAINER_PATH}:delegated"
-            - ".docker/php-fpm/xdebug.ini:/etc/php/${PHP_FPM_VERSION}/fpm/conf.d/zzzz_xdebug.ini:delegated"
+            - "./php-fpm/xdebug.ini:/etc/php/${PHP_FPM_VERSION}/fpm/conf.d/zzzz_xdebug.ini:delegated"
 
     mysql:
         container_name: "${COMPOSE_PROJECT_NAME}_mysql"
@@ -56,8 +54,6 @@ services:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        labels:
-            - traefik.enable=false
         networks:
             - private
             - public
@@ -66,16 +62,12 @@ services:
               target: 3306
               protocol: tcp
               mode: host
-        
         volumes:
             - "${MYSQL_DATA_DIR}:/var/lib/mysql"
-            - ".docker/mysql/my.cnf:/etc/mysql/my.cnf:delegated"
+            - "./mysql/my.cnf:/etc/mysql/my.cnf:delegated"
 
 networks:
     private:
     public:
         external:
-            name: web-reverse-proxy_public
-
-volumes:
-    mysql-datadir:
+            name: "${TRAEFIK_NETWORK_NAME}"

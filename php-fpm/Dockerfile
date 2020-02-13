@@ -1,4 +1,4 @@
-FROM blitznote/debase:18.04
+FROM brezanac/apt-image:18.04
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
