@@ -12,7 +12,7 @@ The `brezanac/apt-image` image is based entirely on the original source code of 
 
 ### Integrated Traefik 2.0  ###
 
-Traefik 2.0 is now fully integrated into the template and can be run manually, if required.
+[Traefik 2.0](https://containo.us/traefik/) is now fully integrated into the template and can be run manually, if required.
 
 For more details please see the instructions [here](#integrating-traefik-reverse-proxy).
 
@@ -30,15 +30,15 @@ The document root (`./public`) is no longer part of the template and is by defau
 
 The shortened version or all the steps required to use this template (explained line by line):
 
-* `[optional]` create the main project folder (skip if one already exists)
+* [optional] create the main project folder (skip if one already exists)
 * step into the main project folder
-* `[optional]` initialize an empty git repository (skip if the project is already versioned by git)
+* [optional] initialize an empty git repository (skip if the project is already versioned by git)
 * add the template repo as a git submodule (current folder **needs** to be a git repository too!)
 * initialize the template submodule
 * update the template submodule with required dependencies
-*  `[optional]` create a public folder (skip if one already exists)
+*  [optional] create a public folder (skip if one already exists)
 * step into the submodule folder
-* `[optional` run the integrated Traefik 2.0 reverse proxy (skip if you already have another Traefik instance running)
+* [optional] run the integrated Traefik 2.0 reverse proxy (skip if you already have another Traefik instance running)
 * run the actual template services
 
 ```
@@ -62,7 +62,7 @@ Clone the repository to a location of your choosing.
 git clone https://github.com/brezanac/docker-amp-template.git .docker
 ```
 
-You can also add the repository as a git submodule to an already existing project that uses git.
+You can also add the repository as a git submodule to an already existing project that uses git, but be aware of the complications that might arise from using submodules.
 
 ```
 git submodule add https://github.com/brezanac/docker-amp-template.git .docker
@@ -86,7 +86,7 @@ git submodule update
 
 ### Configuring the environmental variables file ###
 
-Rename `.env.example` to `.env` and adjust it's values accordingly. 
+Copy `.env.example` to `.env` and adjust it's values accordingly. 
 
 ### Configuring the service configuration files ###
 
@@ -95,7 +95,7 @@ The service folders (`apache`, `php-fpm`, `mysql`) contain files required to bui
 Please adjust these to your needs or simply use them as they are:
 
 * `apache/apache2.conf` - default apache configuration (usually there is no need to change any of this)
-* `apache/vhost.conf` - a place to decalare all your virtual hosts here
+* `apache/vhost.conf` - a place to decalare all your virtual hosts
 * `mysql/my.cnf` - MySQL server configuration
 * `php-fpm/php-fpm.conf` - php-fpm configuration (don't change unless you really know what you are doing)
 * `php-fpm/php.ini` - `php.ini` used for web requests
@@ -103,13 +103,13 @@ Please adjust these to your needs or simply use them as they are:
 * `php-fpm/xdebug.ini` - Xdebug configuration for web requests
 * `php-fpm/xdebug.ini` - Xdebug configuration for CLI requests
 
-**DO NOT** make changes to files that are not listed above unless you really know what you are doing.
+**DO NOT** make changes to files not listed above unless you really know what you are doing.
 
 ### Integrating Traefik reverse proxy ###
 
 [Traefik](https://containo.us/traefik/) is a reverse proxy used to automatically route all HTTP and TCP connections to appropriate Docker containers. 
 
-It also removes the need for *port juggling*, which means that instead of making requests like `localhost:8080` Traefik will allow you to use `docker-amp-template.localhost` which will be routed to the appropriate Docker container.
+It also removes the need for *port juggling*, which means that instead of making requests like `localhost:8080` Traefik will allow you to use something like `docker-amp-template.localhost` which will be routed to the appropriate Docker container.
 
 To run Traefik please switch to your freshly cloned folder (assumed `.docker`) and run the following command:
 
@@ -180,7 +180,7 @@ In case of the default value for `COMPOSE_PROJECT_NAME` the URL is `docker-amp-t
 
 In order for Docker containers to be able to communicate with each other when they are part of a custom Docker network, all requests need to use container names as target host names ([details](https://docs.docker.com/v17.09/engine/userguide/networking/configure-dns/)).
 
-For example, if you would like to access the `mysql` container from within your PHP code (`php-fpm`) you need to use the name of the running `mysql` container as host name. Since Docker prefixes all service names with the `COMPOSE_PROJECT_NAME` value the actual host name of the `mysql` container would be  `docker-amp-template_mysql`.
+For example, if you would like to access the `mysql` container from within your PHP code (`php-fpm`) you need to use the name of the running `mysql` container as host name. Since Docker prefixes all service names with the `COMPOSE_PROJECT_NAME` value the actual host name of the `mysql` container with the default `COMPOSE_PROJECT_VALUE` would be `docker-amp-template_mysql`.
 
 In order to simplify usage this template explicitely sets names for all running containers. This however comes at a cost of not being able to scale the running containers, simply because there is no way to run two containers with the same name at the same time.
 
