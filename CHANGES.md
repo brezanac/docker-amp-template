@@ -76,3 +76,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Removed ###
 
 - removed `public` folder from the template
+
+## [2.0.2] - 2020-02-14
+
+### Added ###
+
+- added a section about Xdebug to README
+
+### Changed ###
+
+- corrections to README
