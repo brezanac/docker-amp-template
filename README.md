@@ -174,6 +174,14 @@ Use `COMPOSE_PROJECT_NAME.localhost` (replace `COMPOSER_PROJECT_NAME` with the v
 
 In case of the default value for `COMPOSE_PROJECT_NAME` the URL is `docker-amp-template.localhost`.
 
+## Debugging PHP code ##
+
+The template provides built-in support for PHP debugging through [Xdebug](https://xdebug.org/).
+
+In order to trigger a debugging session the request needs to contain a cookie named `XDEBUG_SESSION`.
+
+For more details please consult the [official Xdebug documentation](https://xdebug.org/docs/remote).
+
 ## Troubleshooting ##
 
 ### Communication between containers ###
