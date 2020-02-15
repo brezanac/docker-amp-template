@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# A simple script to bring the integrated Traefik service up and down.
+
+# Default project name for the Traefik service.
+# Prevents Docker from nagging about orphan containers.
+default_project_name="traefik_reverse_proxy"
+
+if [[ "$1" != 'up' ]] && [[ "$1" != 'down' ]] || [[ $# -eq 0 ]]; then
+    printf '\nUSAGE: traefik up|down [project_name]\n\n'
+    exit 1
+fi
+
+if [[ "$1" == 'up' ]]; then
+    docker-compose -f docker-compose.traefik.yml -p "${2:-$default_project_name}" "$1" --build -d
+    exit 0
+fi
+
+if [[ "$1" == 'down' ]]; then
+    docker-compose -f docker-compose.traefik.yml -p "${2:-$default_project_name}" "$1"
+    exit 0
+fi

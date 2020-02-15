@@ -68,7 +68,7 @@ You can also add the repository as a git submodule to an already existing projec
 git submodule add https://github.com/brezanac/docker-amp-template.git .docker
 ```
 
-Please note that if you use the git submodule method you will **need to initialize your submodules** after cloning the repository that has this template as a git submodule.
+**NOTE:** if you use the git submodule method you will **need to initialize your submodules** after cloning the repository that has this template as a git submodule.
 
 You can initialize the submodules automatically during the cloning process (replace `REPOSITORY_LOCATION` with the actual URL or local path to the repository).
 
@@ -111,7 +111,36 @@ Please adjust these to your needs or simply use them as they are:
 
 It also removes the need for *port juggling*, which means that instead of making requests like `localhost:8080` Traefik will allow you to use something like `docker-amp-template.localhost` which will be routed to the appropriate Docker container.
 
-To run Traefik please switch to your freshly cloned folder (assumed `.docker`) and run the following command:
+Two scripts are provided with this template to automate the process of bringing Traefik up and down, while also being able to specify the name of the Docker project explicitely:
+
+* `traefik` - Bash script for use on Linux
+* `traefik.bat` - Batch script for use on Windows
+
+Starting and stopping Traefik with the default project name of `traefik_reverse_proxy` on Linux.
+
+```
+./traefik up
+./traefik down
+```
+
+Starting and stopping Traefik with an explicitely set project name on Linux.
+
+```
+./traefik up unimatrix_zero_one
+./traefik down unimatrix_zero_on
+```
+
+Windows equivalents for the above commands is as follows.
+```
+traefik.bat up
+traefik.bat down
+traefik.bat up unimatrix_zero_one
+traefik.bat down unimatrix_zero_on
+```
+
+**NOTE:** if you use a custom project name while bringing Traefik up, you also **MUST** use it while bringing it down!
+
+Alternatively you can run Traefik manually by simply using the following line from within the cloned folder (assumed `.docker`).
 
 ```
 cd .docker
@@ -120,7 +149,7 @@ docker-compose -f docker-compose.traefik.yml -p traefik_reverse_proxy up --build
 
 This will build and run a new instance of Traefik in the background named `traefik_reverse_proxy`.
 
-Please note that you need to run the command **only once** and **only** if you don't already have another Traefik instance that you will be using. 
+**NOTE:** you need to run the command **only once** and **only** if you don't already have another Traefik instance that you will be using. 
 
 You can use the same instance of Traefik for **all your projects** if you want to.
 

@@ -86,3 +86,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed ###
 
 - corrections to README
+
+
+## [2.1.0] - 2020-02-15
+
+### Added ###
+
+- added scripts to control bringing up and down the integrated Traefik service
+
+### Changed ###
+
+- corrections to README to reflect the addition of the Traefik control scripts
