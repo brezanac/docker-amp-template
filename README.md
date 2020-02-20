@@ -4,29 +4,29 @@ A simple Docker template to easily set up web projects that rely on the Apache/M
 
 ## Major changes in version 2.0
 
-### New base image ###
+### New base image
 
 Due to the removal of the original `blitznote/debase` image from Docker Hub, [brezanac/apt-image](https://hub.docker.com/repository/docker/brezanac/apt-image) is now used as a stand-in replacement.
 
 The `brezanac/apt-image` image is based entirely on the original source code of `blitznote/debase` and is generated automatically by Docker Hub from a forked [repository](https://github.com/brezanac/apt-image) on GitHub.
 
-### Integrated Traefik 2.0  ###
+### Integrated Traefik 2.0
 
 [Traefik 2.0](https://containo.us/traefik/) is now fully integrated into the template and can be run manually, if required.
 
 For more details please see the instructions [here](#integrating-traefik-reverse-proxy).
 
-### New folder structure ###
+### New folder structure
 
 In order to integrate the template more easily into existing projects the folder structure has been modified, allowing it to be used from a completely independent location or as part of a git submodule.
 
-### Removed public folder ###
+### Removed public folder
 
 The document root (`./public`) is no longer part of the template and is by default considered to be located one level above the template folder (`../public`).
 
 ## Usage
 
-### The TLDR version please ###
+### The TLDR version please
 
 The shortened version or all the steps required to use this template (explained line by line):
 
@@ -54,7 +54,7 @@ docker-compose -f docker-compose.traefik.yml -p traefik_reverse_proxy up --build
 docker-compose up --build
 ```
 
-### Cloning the repository ###
+### Cloning the repository
 
 Clone the repository to a location of your choosing.
 
@@ -84,11 +84,11 @@ git submodule init
 git submodule update
 ```
 
-### Configuring the environmental variables file ###
+### Configuring the environmental variables file
 
 Copy `.env.example` to `.env` and adjust it's values accordingly. 
 
-### Configuring the service configuration files ###
+### Configuring the service configuration files
 
 The service folders (`apache`, `php-fpm`, `mysql`) contain files required to build and configure the service images.
 
@@ -105,7 +105,7 @@ Please adjust these to your needs or simply use them as they are:
 
 **DO NOT** make changes to files not listed above unless you really know what you are doing.
 
-### Integrating Traefik reverse proxy ###
+### Integrating Traefik reverse proxy
 
 [Traefik](https://containo.us/traefik/) is a reverse proxy used to automatically route all HTTP and TCP connections to appropriate Docker containers. 
 
@@ -182,7 +182,7 @@ ports:
     - "8080:8080"
 ```
 
-### Running the actual template ###
+### Running the actual template
 
 After cloning the repository move into the cloned folder (assumed `.docker`) and run `docker-compose` like in the following example.
 
@@ -197,13 +197,13 @@ If you would like to run the service in the background use the `-d` (detached) a
 docker-compose up -d --build
 ```
 
-### Check if everything is working as expected ###
+### Check if everything is working as expected
 
 Use `COMPOSE_PROJECT_NAME.localhost` (replace `COMPOSER_PROJECT_NAME` with the value from `.env`) in your browser to see if everything is working as expected.
 
 In case of the default value for `COMPOSE_PROJECT_NAME` the URL is `docker-amp-template.localhost`.
 
-## Debugging PHP code ##
+## Debugging PHP code
 
 The template provides built-in support for PHP debugging through [Xdebug](https://xdebug.org/).
 
@@ -211,9 +211,9 @@ In order to trigger a debugging session the request needs to contain a cookie na
 
 For more details please consult the [official Xdebug documentation](https://xdebug.org/docs/remote).
 
-## Troubleshooting ##
+## Troubleshooting
 
-### Communication between containers ###
+### Communication between containers
 
 In order for Docker containers to be able to communicate with each other when they are part of a custom Docker network, all requests need to use container names as target host names ([details](https://docs.docker.com/v17.09/engine/userguide/networking/configure-dns/)).
 
