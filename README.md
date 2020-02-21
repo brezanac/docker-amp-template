@@ -30,15 +30,15 @@ The document root (`./public`) is no longer part of the template and is by defau
 
 The shortened version or all the steps required to use this template (explained line by line):
 
-* [optional] create the main project folder (skip if one already exists)
+* (optional) create the main project folder (skip if one already exists)
 * step into the main project folder
-* [optional] initialize an empty git repository (skip if the project is already versioned by git)
+* (optional) initialize an empty git repository (skip if the project is already versioned by git)
 * add the template repo as a git submodule (current folder **needs** to be a git repository too!)
 * initialize the template submodule
 * update the template submodule with required dependencies
-*  [optional] create a public folder (skip if one already exists)
+*  (optional) create a public folder (skip if one already exists)
 * step into the submodule folder
-* [optional] run the integrated Traefik 2.0 reverse proxy (skip if you already have another Traefik instance running)
+* (optional) run the integrated Traefik 2.0 reverse proxy (skip if you already have another Traefik instance running)
 * run the actual template services
 
 ```
