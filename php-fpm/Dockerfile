@@ -12,7 +12,8 @@ RUN if [ ${USER_ID:-0} -ne 0 ] && [ ${GROUP_ID:-0} -ne 0 ]; then \
     && useradd -l -u ${USER_ID} -g www-data www-data \
 ;fi
 
-# Per-image commands
+# Image provisioning.
+ARG INSTALL_COMPLETE_TZDATA
 ARG PHP_FPM_VERSION
 ENV PHP_VER ${PHP_FPM_VERSION}
 ARG PHP_FPM_SYSTEM_PACKAGES
@@ -22,6 +23,7 @@ COPY xdebug-bin /usr/bin/xdebug
 COPY fpm-bin /usr/bin/php-fpm
 
 RUN apt-get update \
+    && if [ "${INSTALL_COMPLETE_TZDATA}" = "true" ]; then apt-get -y remove tzdata && apt-get -y install tzdata; fi \
     && get-gpg-key 0x14AA40EC0831756756D7F66C4F4EA0AAE5267A6C | apt-key add \
     && printf "deb http://ppa.launchpad.net/ondrej/php/ubuntu bionic main\n" \
 >/etc/apt/sources.list.d/ondrej.list \

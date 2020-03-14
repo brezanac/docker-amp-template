@@ -6,7 +6,8 @@ services:
         build:
             context: ./apache
             dockerfile: Dockerfile
-            args: 
+            args:
+                INSTALL_COMPLETE_TZDATA: "${INSTALL_COMPLETE_TZDATA}"
                 APACHE_SYSTEM_PACKAGES: "${APACHE_SYSTEM_PACKAGES}"
                 APACHE_MODULES_ENABLED: "${APACHE_MODULES_ENABLED}"
                 APACHE_MODULES_DISABLED: "${APACHE_MODULES_DISABLED}"
@@ -22,13 +23,14 @@ services:
             - "./apache/apache2.conf:/etc/apache2/apache2.conf:delegated"
             - "${DOCUMENT_ROOT_HOST_PATH}:${DOCUMENT_ROOT_CONTAINER_PATH}:delegated"
             - "./apache/vhost.conf:/etc/apache2/sites-enabled/000-default.conf:delegated"
-  
+
     php-fpm:
         container_name: "${COMPOSE_PROJECT_NAME}_php-fpm"
         build:
             context: php-fpm
             dockerfile: Dockerfile
             args:
+                INSTALL_COMPLETE_TZDATA: "${INSTALL_COMPLETE_TZDATA}"
                 PHP_FPM_VERSION: "${PHP_FPM_VERSION}"
                 PHP_FPM_SYSTEM_PACKAGES: "${PHP_FPM_SYSTEM_PACKAGES}"
                 PHP_FPM_PEAR_PACKAGES: "${PHP_FPM_PEAR_PACKAGES}"

@@ -12,10 +12,12 @@ RUN if [ ${USER_ID:-0} -ne 0 ] && [ ${GROUP_ID:-0} -ne 0 ]; then \
     && useradd -l -u ${USER_ID} -g www-data www-data \
 ;fi
 
-# Per-image commands
+# Image provisioning.
+ARG INSTALL_COMPLETE_TZDATA
 ARG APACHE_SYSTEM_PACKAGES
 
 RUN apt-get update \
+    && if [ "${INSTALL_COMPLETE_TZDATA}" = "true" ]; then apt-get -y remove tzdata && apt-get -y install tzdata; fi \
     && get-gpg-key 0x14AA40EC0831756756D7F66C4F4EA0AAE5267A6C | apt-key add \
     && printf "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu bionic main" \
 >/etc/apt/sources.list.d/ondrej.list \
