@@ -86,7 +86,7 @@ git submodule update
 
 ### Configuring the environmental variables file
 
-Copy `.env.example` to `.env` and adjust it's values accordingly. 
+Copy `.env.example` to `.env` and adjust it's values accordingly.
 
 ### Configuring the service configuration files
 
@@ -222,6 +222,14 @@ For example, if you would like to access the `mysql` container from within your 
 In order to simplify usage this template explicitely sets names for all running containers. This however comes at a cost of not being able to scale the running containers, simply because there is no way to run two containers with the same name at the same time.
 
 If you wish to remove this limitation and don't mind the dynamically named containers just remove all `container_name` lines from `docker-compose.yml` and the `COMPOSE_PROJECT_NAME` line from `.env`.
+
+### Availability of time zones
+
+In order to reduce it's size the base Docker image used for the `apache` and `php-fpm` services (`brezanac/apt-image`) contains very limited support for time zones, with `UTC` being used as default.
+
+For some use cases this might be enough. However, if you rely on having a full collection of up to date time zone definitions you can configure the build process to remove the slimmed down version of `tzdata` and install the complete one. 
+
+For that you just need to set `INSTALL_COMPLETE_TZDATA` to `true` in your `.env` file or any other value other than `true` to keep the original slimmed down version.
 
 ## Requirements
 

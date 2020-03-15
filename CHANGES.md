@@ -97,3 +97,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - corrections to README to reflect the addition of the Traefik control scripts
+
+## [2.2.0] - 2020-03-14
+
+### Added
+
+- added a new configuration option to .env.example `INSTALL_COMPLETE_TZDATA` as part of fixing #3.
+
+### Changed
+
+- fixed issue #3 where apache and php-fpm containers weren't able to use any other timezone than UTC
+- updated README.md and CHANGES.md 
