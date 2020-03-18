@@ -127,7 +127,7 @@ Starting and stopping Traefik with an explicitely set project name on Linux.
 
 ```
 ./traefik up unimatrix_zero_one
-./traefik down unimatrix_zero_on
+./traefik down unimatrix_zero_one
 ```
 
 Windows equivalents for the above commands is as follows.
@@ -135,7 +135,7 @@ Windows equivalents for the above commands is as follows.
 traefik.bat up
 traefik.bat down
 traefik.bat up unimatrix_zero_one
-traefik.bat down unimatrix_zero_on
+traefik.bat down unimatrix_zero_one
 ```
 
 **NOTE:** if you use a custom project name while bringing Traefik up, you also **MUST** use it while bringing it down!
