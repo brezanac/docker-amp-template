@@ -54,12 +54,13 @@ docker-compose -f docker-compose.traefik.yml -p traefik_reverse_proxy up --build
 docker-compose up --build
 ```
 
-### Still too long. TLDR TLDR version please
+### Still too long - TLDR TLDR version please
 
 If you are not comfortable with using git submodules or just don't need the added complexity that comes with using them you can just clone the git repository and delete the `.git` folder inside it.
 
 ```
 git clone https://github.com/brezanac/docker-amp-template.git .docker
+rm -rf .docker/.git
 ```
 
 However, do note that by doing this you will lose the ability to quickly update the project through git pulls so you will need to do it manually every time.
