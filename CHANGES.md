@@ -107,4 +107,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - fixed issue #3 where apache and php-fpm containers weren't able to use any other timezone than UTC
+- updated README.md and CHANGES.md
+
+## [2.3.0] - 2020-03-14
+
+### Changed
+
+- due to issues with the upstream image the brezanac/apt-image base image was replaced by the official ubuntu:18.04 image
 - updated README.md and CHANGES.md 
+
+### Removed
+- removed the Blackfire support section in the `php-fpm` service entirely due to it being obsolete

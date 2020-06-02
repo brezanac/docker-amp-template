@@ -1,4 +1,4 @@
-FROM brezanac/apt-image:18.04
+FROM ubuntu:18.04
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
@@ -17,20 +17,15 @@ ARG INSTALL_COMPLETE_TZDATA
 ARG APACHE_SYSTEM_PACKAGES
 
 RUN apt-get update \
-    && if [ "${INSTALL_COMPLETE_TZDATA}" = "true" ]; then apt-get -y remove tzdata && apt-get -y install tzdata; fi \
-    && get-gpg-key 0x14AA40EC0831756756D7F66C4F4EA0AAE5267A6C | apt-key add \
-    && printf "deb http://ppa.launchpad.net/ondrej/apache2/ubuntu bionic main" \
->/etc/apt/sources.list.d/ondrej.list \
+    && if [ "${INSTALL_COMPLETE_TZDATA}" = "true" ]; then DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata; fi \
+    && apt-get -y install curl software-properties-common \
+    && yes | add-apt-repository ppa:ondrej/php \
     && apt-get update \
-    && apt-get -y install --no-install-recommends --no-install-suggests \
-        apache2 ${APACHE_SYSTEM_PACKAGES} \
+    && apt-get -y install --no-install-recommends --no-install-suggests apache2 ${APACHE_SYSTEM_PACKAGES} \
     && apt-get -y --purge autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && rm -rf /usr/share/{man,doc} \
-    \
-    && rm -f conf-enabled/serve-cgi-bin.conf \
-        mods-enabled/autoindex.conf \
-        mods-enabled/autoindex.load \
+    && rm -f conf-enabled/serve-cgi-bin.conf mods-enabled/autoindex.conf mods-enabled/autoindex.load \
     && install -d -m 0755 -o www-data -g www-data /var/run/apache2 \
     && chmod 755 /var/log/apache2 \
     && chown -R www-data:www-data /var/log/apache2 \
