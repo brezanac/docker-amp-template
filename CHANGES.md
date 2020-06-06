@@ -109,7 +109,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - fixed issue #3 where apache and php-fpm containers weren't able to use any other timezone than UTC
 - updated README.md and CHANGES.md
 
-## [2.3.0] - 2020-03-14
+## [2.3.0] - 2020-06-02
 
 ### Changed
 
@@ -118,3 +118,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Removed
 - removed the Blackfire support section in the `php-fpm` service entirely due to it being obsolete
+
+## [2.3.1] - 2020-06-06
+
+### Changed
+
+- disabled XDebug autostart to improve performance for non-debug sessions
+- small corrections to README.md
