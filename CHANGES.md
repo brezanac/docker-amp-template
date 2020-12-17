@@ -125,3 +125,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - disabled XDebug autostart to improve performance for non-debug sessions
 - small corrections to README.md
+
+## [2.3.2] - 2020-12-17
+
+### Changed
+
+- small corrections to .env.example
