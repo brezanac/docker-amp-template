@@ -2,7 +2,15 @@
 
 A simple Docker template to easily set up web projects that rely on the Apache/MySQL/PHP stack, with a fully integrated and optional [Traefik](https://traefik.io/) reverse proxy.
 
-## Major changes in version 2.3
+## Major changes in version 2.4.0.
+
+### Xdebug 3.0
+
+Due to upgrade to Xdebug 3.0 (3.0.1) some configuration options for Xdebug have been renamed or even removed.
+
+This should have no impact on new projects, however existing projects might want to consult the [official upgrade guide](https://xdebug.org/docs/upgrade_guide) for details on how to upgrade their projects.
+
+## Major changes in version 2.3.
 
 ### New base image
 

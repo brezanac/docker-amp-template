@@ -131,3 +131,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - small corrections to .env.example
+
+## [2.4.0] - 2020-12-17
+
+### Changed
+
+- upgraded to Xdebug 3.0.1
