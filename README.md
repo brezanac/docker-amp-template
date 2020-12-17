@@ -18,6 +18,8 @@ Due to constant issues with the upstream Docker image the brezanac/apt-image was
 
 As a result containers running the `apache` and `php-fpm` services will require more resources, however future updates of the template will not depend upon external projects which might end up being abandoned or in need of constant maintenance.
 
+**NOTE:** the default port for Xdebug 3 has changed from port `9000` to port `9003`.
+
 ### Integrated Traefik 2.0
 
 [Traefik 2.0](https://containo.us/traefik/) is now fully integrated into the template and can be optionally run, if required.
@@ -30,7 +32,7 @@ In order to integrate the template more easily into existing projects the folder
 
 ### Removed public folder
 
-**NOTE**: The document root (`./public`) is no longer part of the template itself and is by default considered to be located one level above the template folder (`../public`). If your public folder is located somewhere else please adjust the value in `.docker/apache/vhost.conf`.   
+**NOTE**: the document root (`./public`) is no longer part of the template itself and is by default considered to be located one level above the template folder (`../public`). If your public folder is located somewhere else please adjust the value in `.docker/apache/vhost.conf`.   
 
 ## Usage
 
