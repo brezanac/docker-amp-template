@@ -7,6 +7,9 @@ services:
             context: ./apache
             dockerfile: Dockerfile
             args:
+                PUID: "${PUID}"
+                PGID: "${PGID}"
+                PROJECT_NAME: "${COMPOSE_PROJECT_NAME}"
                 INSTALL_COMPLETE_TZDATA: "${INSTALL_COMPLETE_TZDATA}"
                 APACHE_SYSTEM_PACKAGES: "${APACHE_SYSTEM_PACKAGES}"
                 APACHE_MODULES_ENABLED: "${APACHE_MODULES_ENABLED}"
@@ -30,6 +33,8 @@ services:
             context: php-fpm
             dockerfile: Dockerfile
             args:
+                PUID: "${PUID}"
+                PGID: "${PGID}"
                 INSTALL_COMPLETE_TZDATA: "${INSTALL_COMPLETE_TZDATA}"
                 PHP_FPM_VERSION: "${PHP_FPM_VERSION}"
                 PHP_FPM_SYSTEM_PACKAGES: "${PHP_FPM_SYSTEM_PACKAGES}"
@@ -48,28 +53,28 @@ services:
             - "${DOCUMENT_ROOT_HOST_PATH}:${DOCUMENT_ROOT_CONTAINER_PATH}:delegated"
             - "./php-fpm/xdebug.ini:/etc/php/${PHP_FPM_VERSION}/fpm/conf.d/zzzz_xdebug.ini:delegated"
 
-    mysql:
-        container_name: "${COMPOSE_PROJECT_NAME}_mysql"
-        image: "mysql:${MYSQL_VERSION}"
+    mariadb:
+        container_name: "${COMPOSE_PROJECT_NAME}_mariadb"
+        image: "mariadb:${MARIADB_VERSION}"
         environment:
-            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-            - MYSQL_DATABASE=${MYSQL_DATABASE}
-            - MYSQL_USER=${MYSQL_USER}
-            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+            - MARIADB_DATABASE=${MARIADB_DATABASE}
+            - MARIADB_USER=${MARIADB_USER}
+            - MARIADB_PASSWORD=${MARIADB_PASSWORD}
         networks:
             - private
             - public
         ports:
-            - published: "${MYSQL_PUBLISHED_PORT}"
+            - published: "${MARIADB_PUBLISHED_PORT}"
               target: 3306
               protocol: tcp
               mode: host
         volumes:
-            - "${MYSQL_DATA_DIR}:/var/lib/mysql"
-            - "./mysql/my.cnf:/etc/mysql/my.cnf:delegated"
+            - "${MARIADB_DATA_DIR}:/var/lib/mysql"
+            - "./mariadb/my.cnf:/etc/mysql/my.cnf:delegated"
 
 networks:
     private:
     public:
-        external:
-            name: "${TRAEFIK_NETWORK_NAME}"
+        name: "${TRAEFIK_NETWORK_NAME}"
+        external: true

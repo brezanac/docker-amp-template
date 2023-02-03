@@ -2,15 +2,17 @@ FROM ubuntu:18.04
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
-# Custom user and group ID
-ARG USER_ID
-ARG GROUP_ID
-RUN if [ ${USER_ID:-0} -ne 0 ] && [ ${GROUP_ID:-0} -ne 0 ]; then \
-    userdel -f www-data \
-    && if getent group www-data ; then groupdel www-data; fi \
-    && groupadd -g ${GROUP_ID} www-data \
-    && useradd -l -u ${USER_ID} -g www-data www-data \
-;fi
+# Used for dynamic Apache configuration.
+ENV PROJECT_NAME=${PROJECT_NAME}
+
+# Custom user and group ID.
+ARG PUID=1000
+ARG PGID=1000
+
+# Assigning host user and group ID to the running container user
+# This prevents permission and overnership issues inside the container.
+RUN groupmod -o -g ${PGID} www-data && \
+    usermod -o -u ${PUID} -g www-data www-data
 
 # Image provisioning.
 ARG INSTALL_COMPLETE_TZDATA

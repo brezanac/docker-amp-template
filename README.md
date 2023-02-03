@@ -2,6 +2,16 @@
 
 A simple Docker template to easily set up web projects that rely on the Apache/MySQL/PHP stack, with a fully integrated and optional [Traefik](https://traefik.io/) reverse proxy.
 
+## Major changes in version 3.0.0
+
+### MariaDB
+
+Support for MySQL containers has been dropped in favor of MariaDB.
+
+### PUID / PGID
+
+Apache and PHP-FPM containers now have support for running their containers under specific user and group id to avoid permission and ownership issues.  
+
 ## Major changes in version 2.4.0.
 
 ### Xdebug 3.0

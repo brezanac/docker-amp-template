@@ -137,3 +137,20 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - upgraded to Xdebug 3.0.1
+
+## [3.0.0] - 2023-02-03
+
+### Added
+
+- added support for `MariaDB`
+
+### Changed
+
+- added support for `PUID` and `PGID` to prevent permission and ownership issues with running containers
+- small changes to dynamic configuration for the `apache` container
+- updated `.gitignore` to reflect new changes
+
+### Removed
+
+- removed support for `MySQL`
+
