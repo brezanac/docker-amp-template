@@ -154,3 +154,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - removed support for `MySQL`
 
+## [3.1.0] - 2023-02-05
+
+### Changed
+
+- removed top level `version` from both docker compose `yml` files
+
+## [3.2.0] - 2023-02-05
+
+### Changed
+
+- switched MariaDB from using bind mount volumes to Docker managed volumes

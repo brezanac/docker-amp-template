@@ -1,6 +1,10 @@
 # docker-amp-template
 
-A simple Docker template to easily set up web projects that rely on the Apache/MySQL/PHP stack, with a fully integrated and optional [Traefik](https://traefik.io/) reverse proxy.
+A simple Docker template to easily set up web projects that rely on the Apache/MariaDB/PHP stack, with a fully integrated and optional [Traefik](https://traefik.io/) reverse proxy.
+
+## Major changes in version 3.2.0
+
+Due to potential issues regarding permissions and ownership of files created through bind mounted volumes, MariaDB is now using a Docker managed volume.
 
 ## Major changes in version 3.0.0
 
@@ -85,13 +89,13 @@ Copy `.env.example` to `.env` and adjust it's values accordingly.
 
 ### Configuring the service configuration files
 
-The service folders (`apache`, `php-fpm`, `mysql`) contain files required to build and configure the service images.
+The service folders (`apache`, `php-fpm`, `mariadb`) contain files required to build and configure the service images.
 
 If required, please adjust these to your needs:
 
 * `apache/apache2.conf` - default apache configuration (usually there is no need to modify any of this)
 * `apache/vhost.conf` - a place to declare all your virtual hosts
-* `mysql/my.cnf` - MySQL server configuration
+* `mariadb/my.cnf` - MariaDB server configuration
 * `php-fpm/php-fpm.conf` - php-fpm configuration (don't modify unless you really know what you are doing)
 * `php-fpm/php.ini` - `php.ini` used for web requests
 * `php-fpm/php-cli.ini` - `php.ini` used for CLI requests
@@ -202,7 +206,7 @@ For more details please consult the [official Xdebug documentation](https://xdeb
 
 In order for Docker containers to be able to communicate with each other when they are part of a custom Docker network, all requests need to use container names as target host names ([details](https://docs.docker.com/v17.09/engine/userguide/networking/configure-dns/)).
 
-For example, if you would like to access the `mysql` container from within your PHP code (`php-fpm`) you need to use the name of the running `mysql` container as host name. Since Docker prefixes all service container names with the `COMPOSE_PROJECT_NAME` value the actual host name of the `mysql` container with the default `COMPOSE_PROJECT_VALUE` would be `docker-amp-template_mysql`.
+For example, if you would like to access the `mariadb` container from within your PHP code (`php-fpm`) you need to use the name of the running `mariadb` container as host name. Since Docker prefixes all service container names with the `COMPOSE_PROJECT_NAME` value the actual host name of the `mariadb` container with the default `COMPOSE_PROJECT_VALUE` would be `docker-amp-template_mariadb`.
 
 In order to simplify usage this template explicitly sets names for all running containers. This however comes at a cost of not being able to scale the running containers, simply because there is no way to run two containers with the same name at the same time.
 
