@@ -68,7 +68,7 @@ services:
               protocol: tcp
               mode: host
         volumes:
-            - "${MARIADB_DATA_DIR}:/var/lib/mysql"
+            - "mariadb-data:/var/lib/mysql"
             - "./mariadb/my.cnf:/etc/mysql/my.cnf:delegated"
 
 networks:
@@ -76,3 +76,6 @@ networks:
     public:
         name: "${TRAEFIK_NETWORK_NAME}"
         external: true
+volumes:
+    mariadb-data:
+
