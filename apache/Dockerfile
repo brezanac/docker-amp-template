@@ -2,9 +2,6 @@ FROM ubuntu:18.04
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
-# Used for dynamic Apache configuration.
-ENV PROJECT_NAME=${PROJECT_NAME}
-
 # Custom user and group ID.
 ARG PUID=1000
 ARG PGID=1000
