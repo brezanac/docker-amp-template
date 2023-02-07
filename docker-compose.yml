@@ -7,7 +7,6 @@ services:
             args:
                 PUID: "${PUID}"
                 PGID: "${PGID}"
-                PROJECT_NAME: "${COMPOSE_PROJECT_NAME}"
                 INSTALL_COMPLETE_TZDATA: "${INSTALL_COMPLETE_TZDATA}"
                 APACHE_SYSTEM_PACKAGES: "${APACHE_SYSTEM_PACKAGES}"
                 APACHE_MODULES_ENABLED: "${APACHE_MODULES_ENABLED}"
