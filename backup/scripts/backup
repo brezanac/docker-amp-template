@@ -1,0 +1,12 @@
+#!/bin/sh
+# General bootstrap for running backup of specific services.
+
+# Backup is only performed if it's enabled.
+# NOTE: This does not disable the backup service, just makes sure no backup is done if BACKUP_ENABLED is not set to true.
+if [ "${BACKUP_ENABLED}" != "true" ]; then
+  exit
+fi;
+
+# mariadb
+source "/var/backup/scripts/backup-mariadb"
+

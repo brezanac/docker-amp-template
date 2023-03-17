@@ -69,7 +69,33 @@ services:
         volumes:
             - "mariadb-data:/var/lib/mysql"
             - "./mariadb/my.cnf:/etc/mysql/my.cnf:delegated"
-
+        healthcheck:
+            test: ["CMD", "mariadb-admin" ,"ping", "-h", "127.0.0.1", "-u", "root", "-p$$MARIADB_ROOT_PASSWORD"]
+            interval: 2s
+            timeout: 20s
+            retries: 10
+    backup:
+        container_name: "${COMPOSE_PROJECT_NAME}_backup"
+        build:
+            context: backup
+            dockerfile: Dockerfile
+        depends_on:
+            mariadb:
+                condition: service_healthy
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - BACKUP_ENABLED=${BACKUP_ENABLED}
+            - BACKUP_AUTOCLEANUP_ENABLED=${BACKUP_AUTOCLEANUP_ENABLED}
+            - BACKUP_AUTOCLEANUP_AGE_THRESHOLD=${BACKUP_AUTOCLEANUP_AGE_THRESHOLD}
+            - MARIADB_HOSTNAME=${COMPOSE_PROJECT_NAME}_mariadb
+            - MARIADB_DATABASE=${MARIADB_DATABASE}
+            - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+        networks:
+            - private
+        volumes:
+            - "/etc/localtime:/etc/localtime:ro"
+            - "${BACKUP_HOST_PATH}:/var/backup/data"
 networks:
     private:
     public:

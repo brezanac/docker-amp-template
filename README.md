@@ -2,6 +2,12 @@
 
 A simple Docker template to easily set up web projects that rely on the Apache/MariaDB/PHP stack, with a fully integrated and optional [Traefik](https://traefik.io/) reverse proxy.
 
+## Major changes in version 3.3.0
+
+### Backup
+
+Version 3.3.0 brings support for adding backups of the defined services. This version specifically adds support for backing up the database from the `mariadb` service. 
+
 ## Major changes in version 3.2.0
 
 Due to potential issues regarding permissions and ownership of files created through bind mounted volumes, MariaDB is now using a Docker managed volume.
@@ -191,6 +197,24 @@ docker-compose up -d --build
 Use `COMPOSE_PROJECT_NAME.localhost` (replace `COMPOSER_PROJECT_NAME` with the value from `.env`) in your browser to see if everything is working as expected.
 
 In case of the default value for `COMPOSE_PROJECT_NAME` the URL is `docker-amp-template.localhost`.
+
+## Backup
+
+Version 3.3.0 added support for defining and running automatic backups for defined services.
+
+Backups are executed **once** per every `docker compose up`, and can be turned off by setting `BACKUP_ENABLED` in `.env` to any other value that `true`.
+
+Please note that this will only skip the execution of the backup scripts but the `backup` service will still run.
+
+The default location for storing backups is `backup/.data` but any location with adequate permissions can be used. 
+
+It is important to note that if the host path does not exist when the `backup` service runs it will be created and owned by `root`, which means it might be required to chown or chmod the folder.
+
+Please note that the generated backups are owned by the non-privileged user running the service (usually `UID/GID=1000/1000`). 
+
+If the value of `BACKUP_AUTOCLEANUP_ENABLED` is set to `true` (default) the backup process will delete all existing backups in `BACKUP_HOST_PATH` which are older than `BACKUP_AUTOCLEANUP_AGE_THRESHOLD` days.
+
+It is possible to define a multitude of backup scripts for various services and purposes by creating scripts in the `backup/scripts` folder and sourcing them in the `backup/scripts/backup` file.
 
 ## Debugging PHP code
 

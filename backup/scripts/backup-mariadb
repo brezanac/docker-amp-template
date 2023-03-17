@@ -1,0 +1,17 @@
+#!/bin/sh
+# Performs backups for the mariadb service and autocleanup (if enabled).
+
+# Removes all existing backups which are older than BACKUP_AUTOCLEANUP_AGE_THRESHOLD days.
+if [ "${BACKUP_AUTOCLEANUP_ENABLED}" == "true" ]; then
+  find /var/backup/data/mariadb/* -type f -mtime "+${BACKUP_AUTOCLEANUP_AGE_THRESHOLD}" -exec rm {} \;
+fi;
+
+# Making sure the backup folder for mariadb service is available.
+[ ! -d "/var/backup/data/mariadb" ] && mkdir -p /var/backup/data/mariadb
+
+# Path and filename of the actual backup.
+output="/var/backup/data/mariadb/${MARIADB_DATABASE}-$(date +%F_%H-%M-%S).sql.gz"
+
+# Perform a database backup and assign appropriate ownership over the backup but ONLY if the backup was successful.
+mariadb-dump -h ${MARIADB_HOSTNAME} -u root -p${MARIADB_ROOT_PASSWORD} ${MARIADB_DATABASE} | gzip > "${output}" && \
+chown ${PUID}:${PGID} $output

@@ -165,3 +165,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - switched MariaDB from using bind mount volumes to Docker managed volumes
+
+## [3.3.0] - 2023-03-17
+
+### Added
+
+- added a new service `backup` to support backing up data from services
+- added support for backing up database from the `mariadb` service
+
+### Changed
+
+- added healthcheck criteria for the mariadb service to aid the `backup` service
