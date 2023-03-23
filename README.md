@@ -206,7 +206,7 @@ Backups are executed **once** per every `docker compose up`, and can be turned o
 
 Please note that this will only skip the execution of the backup scripts but the `backup` service will still run.
 
-The default location for storing backups is `backup/.data` but any location with adequate permissions can be used. 
+The default location for storing backups is `.data/backup` but any location with adequate permissions can be used. 
 
 It is important to note that if the host path does not exist when the `backup` service runs it will be created and owned by `root`, which means it might be required to chown or chmod the folder.
 
