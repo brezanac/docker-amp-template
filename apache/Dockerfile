@@ -2,6 +2,10 @@ FROM ubuntu:18.04
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
+# Setting the default timezone (tzdata required).
+ARG DEFAULT_TIMEZONE=UTC
+ENV TZ=${DEFAULT_TIMEZONE}
+
 # Custom user and group ID.
 ARG PUID=1000
 ARG PGID=1000

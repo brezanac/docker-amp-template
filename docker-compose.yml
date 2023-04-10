@@ -7,6 +7,7 @@ services:
             args:
                 PUID: "${PUID}"
                 PGID: "${PGID}"
+                DEFAULT_TIMEZONE: "${DEFAULT_TIMEZONE}"
                 INSTALL_COMPLETE_TZDATA: "${INSTALL_COMPLETE_TZDATA}"
                 APACHE_SYSTEM_PACKAGES: "${APACHE_SYSTEM_PACKAGES}"
                 APACHE_MODULES_ENABLED: "${APACHE_MODULES_ENABLED}"
@@ -32,6 +33,7 @@ services:
             args:
                 PUID: "${PUID}"
                 PGID: "${PGID}"
+                DEFAULT_TIMEZONE: "${DEFAULT_TIMEZONE}"
                 INSTALL_COMPLETE_TZDATA: "${INSTALL_COMPLETE_TZDATA}"
                 PHP_FPM_VERSION: "${PHP_FPM_VERSION}"
                 PHP_FPM_SYSTEM_PACKAGES: "${PHP_FPM_SYSTEM_PACKAGES}"
@@ -54,6 +56,7 @@ services:
         container_name: "${COMPOSE_PROJECT_NAME}_mariadb"
         image: "mariadb:${MARIADB_VERSION}"
         environment:
+            - TZ=${DEFAULT_TIMEZONE}
             - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
             - MARIADB_DATABASE=${MARIADB_DATABASE}
             - MARIADB_USER=${MARIADB_USER}
@@ -85,6 +88,7 @@ services:
         environment:
             - PUID=${PUID}
             - PGID=${PGID}
+            - TZ=${DEFAULT_TIMEZONE}
             - BACKUP_ENABLED=${BACKUP_ENABLED}
             - BACKUP_AUTOCLEANUP_ENABLED=${BACKUP_AUTOCLEANUP_ENABLED}
             - BACKUP_AUTOCLEANUP_AGE_THRESHOLD=${BACKUP_AUTOCLEANUP_AGE_THRESHOLD}

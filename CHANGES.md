@@ -182,3 +182,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - moved the location of the backup data folder from `backup/.data` to `.data/backup`
+
+## [3.5.0] - 2023-04-10
+
+### Added
+
+- added support for the `TZ` environmental variable inside all images/containers 
