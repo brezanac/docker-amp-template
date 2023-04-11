@@ -191,17 +191,9 @@ In order to simplify usage this template explicitly sets names for all running c
 
 If you wish to remove this limitation and don't mind the dynamically named containers just remove all `container_name` lines from `docker-compose.yml` and the `COMPOSE_PROJECT_NAME` line from `.env`.
 
-### Availability of time zones
-
-The default Ubuntu Docker image does not come with `tzdata` installed which means that it technically does not provide support for timezones.  
-
-If your service depends on timezone support (i.e. your PHP code uses `DataTime` functions etc.) make sure to set the value of `INSTALL_COMPLETE_TZDATA` to `true`.
-
 ### Notes on the TZ environmental variable
 
 All generated images and running containers make use of the `TZ` environmental variable in order to guarantee the specified default timezone set by `DEFAULT_TIMEZONE` in the `.env` file.
-
-Please note that in order for this environmental variable to be honored by date/time functions inside running containers, the `tzdata` package needs to be installed.
 
 Additionally, while the `TZ` environmental variable is honored by date/time functions inside the container, it will not affect the default value of `/etc/timezone` which defaults to the `UTC`.
 

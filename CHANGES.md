@@ -198,3 +198,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - changed a number of environmental variables for the `backup` process to reflect new functionality
+
+## [3.7.0] - 2023-04-11
+
+### Removed
+
+- removed `INSTALL_COMPLETE_TZDATA` support since `tzdata` is now mandatory for all images

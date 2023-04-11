@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 
-# Setting the default timezone (tzdata required).
+# Setting the default timezone.
 ARG DEFAULT_TIMEZONE=UTC
 ENV TZ=${DEFAULT_TIMEZONE}
 
@@ -16,12 +16,10 @@ RUN groupmod -o -g ${PGID} www-data && \
     usermod -o -u ${PUID} -g www-data www-data
 
 # Image provisioning.
-ARG INSTALL_COMPLETE_TZDATA
 ARG APACHE_SYSTEM_PACKAGES
 
 RUN apt-get update \
-    && if [ "${INSTALL_COMPLETE_TZDATA}" = "true" ]; then DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata; fi \
-    && apt-get -y install curl software-properties-common \
+    && apt-get -y install curl software-properties-common tzdata \
     && yes | add-apt-repository ppa:ondrej/php \
     && apt-get update \
     && apt-get -y install --no-install-recommends --no-install-suggests apache2 ${APACHE_SYSTEM_PACKAGES} \
