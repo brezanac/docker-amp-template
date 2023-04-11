@@ -202,17 +202,26 @@ In case of the default value for `COMPOSE_PROJECT_NAME` the URL is `docker-amp-t
 
 Version 3.3.0 added support for defining and running automatic backups for defined services.
 
-Backups are executed **once** per every `docker compose up`, and can be turned off by setting `BACKUP_ENABLED` in `.env` to any other value that `true`.
+Backups are executed **once** per every `docker compose up` or by running `docker compose up backup` on demand and can be turned off by setting `BACKUP_ENABLED` in `.env` to any other value that `true`.
 
 Please note that this will only skip the execution of the backup scripts but the `backup` service will still run.
 
-The default location for storing backups is `.data/backup` but any location with adequate permissions can be used. 
+The default location for storing backups is `.data/backup` but any location with adequate permissions can be used instead. 
 
-It is important to note that if the host path does not exist when the `backup` service runs it will be created and owned by `root`, which means it might be required to chown or chmod the folder.
+It is important to note that if the host path does not exist when the `backup` service runs it will be created and owned by `root`, which means it might be required to `chown` or `chmod` the folder.
 
 Please note that the generated backups are owned by the non-privileged user running the service (usually `UID/GID=1000/1000`). 
 
-If the value of `BACKUP_AUTOCLEANUP_ENABLED` is set to `true` (default) the backup process will delete all existing backups in `BACKUP_HOST_PATH` which are older than `BACKUP_AUTOCLEANUP_AGE_THRESHOLD` days.
+The `backup` service provides two methods of pruning existing backups:
+
+- by removing backups which are older than the specified age threshold
+- by removing all but the specified number of newest backups
+
+If the value of `BACKUP_PRUNE_AGE_ENABLED` is set to `true`, the backup process will delete all existing backups which are older than `BACKUP_PRUNE_AGE_THRESHOLD` days.
+
+If the value of `BACKUP_PRUNE_NEWEST_ENABLED` is set to `true`, the backup process will delete all existing backups except the `BACKUP_PRUNE_NEWEST_THRESHOLD` newest of backups.
+
+Both pruning methods can be enabled at the same time.
 
 It is possible to define a multitude of backup scripts for various services and purposes by creating scripts in the `backup/scripts` folder and sourcing them in the `backup/scripts/backup` file.
 

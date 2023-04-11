@@ -188,3 +188,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 
 - added support for the `TZ` environmental variable inside all images/containers 
+
+## [3.6.0] - 2023-04-11
+
+### Added
+
+- added support for purging existing backups based on the number of newest retained backups
+
+### Changed
+
+- changed a number of environmental variables for the `backup` process to reflect new functionality

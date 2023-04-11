@@ -1,9 +1,14 @@
 #!/bin/sh
-# Performs backups for the mariadb service and autocleanup (if enabled).
+# Performs backups for the mariadb service and backup pruning, if enabled.
 
-# Removes all existing backups which are older than BACKUP_AUTOCLEANUP_AGE_THRESHOLD days.
-if [ "${BACKUP_AUTOCLEANUP_ENABLED}" == "true" ]; then
-  find /var/backup/data/mariadb/* -type f -mtime "+${BACKUP_AUTOCLEANUP_AGE_THRESHOLD}" -exec rm {} \;
+# Removes existing backups which are older than BACKUP_PRUNE_AGE_THRESHOLD days.
+if [ "${BACKUP_PRUNE_AGE_ENABLED}" == "true" ]; then
+  find /var/backup/data/mariadb/* -type f -mtime "+${BACKUP_PRUNE_AGE_THRESHOLD}" -exec rm {} \;
+fi;
+
+# Removes existing backups which are older than the BACKUP_PRUNE_NEWEST_THRESHOLD newest ones.
+if [ "${BACKUP_PRUNE_NEWEST_ENABLED}" == "true" ]; then
+  ls -t /var/backup/data/mariadb/* | tail -n +$((${BACKUP_PRUNE_NEWEST_THRESHOLD})) | xargs -r rm --
 fi;
 
 # Making sure the backup folder for mariadb service is available.
