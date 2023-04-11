@@ -2,58 +2,6 @@
 
 A simple Docker template to easily set up web projects that rely on the Apache/MariaDB/PHP stack, with a fully integrated and optional [Traefik](https://traefik.io/) reverse proxy.
 
-## Major changes in version 3.3.0
-
-### Backup
-
-Version 3.3.0 brings support for adding backups of the defined services. This version specifically adds support for backing up the database from the `mariadb` service. 
-
-## Major changes in version 3.2.0
-
-Due to potential issues regarding permissions and ownership of files created through bind mounted volumes, MariaDB is now using a Docker managed volume.
-
-## Major changes in version 3.0.0
-
-### MariaDB
-
-Support for MySQL containers has been dropped in favor of MariaDB.
-
-### PUID / PGID
-
-Apache and PHP-FPM containers now have support for running their containers under specific user and group id to avoid permission and ownership issues.  
-
-## Major changes in version 2.4.0.
-
-### Xdebug 3.0
-
-Due to upgrade to Xdebug 3.0 (3.0.1) some configuration options for Xdebug have been renamed or even removed.
-
-This should have no impact on new projects, however existing projects might want to consult the [official upgrade guide](https://xdebug.org/docs/upgrade_guide) for details on how to upgrade their projects.
-
-## Major changes in version 2.3.
-
-### New base image
-
-Due to constant issues with the upstream Docker image the brezanac/apt-image was replaced by the [official Ubuntu 18.04 image](https://hub.docker.com/_/ubuntu).
-
-As a result containers running the `apache` and `php-fpm` services will require more resources, however future updates of the template will not depend upon external projects which might end up being abandoned or in need of constant maintenance.
-
-**NOTE:** the default port for Xdebug 3 has changed from port `9000` to port `9003`.
-
-### Integrated Traefik 2.0
-
-[Traefik 2.0](https://containo.us/traefik/) is now fully integrated into the template and can be optionally run, if required.
-
-For more details please see the instructions [here](#integrating-traefik-reverse-proxy).
-
-### New folder structure
-
-In order to integrate the template more easily into existing projects the folder structure has been modified, allowing the template to be cloned and used from a completely independent location or as part of a git submodule.
-
-### Removed public folder
-
-**NOTE**: the document root (`./public`) is no longer part of the template itself and is by default considered to be located one level above the template folder (`../public`). If your public folder is located somewhere else please adjust the value in `.docker/apache/vhost.conf`.   
-
 ## Usage
 
 ### Preparation steps
@@ -199,8 +147,6 @@ Use `COMPOSE_PROJECT_NAME.localhost` (replace `COMPOSER_PROJECT_NAME` with the v
 In case of the default value for `COMPOSE_PROJECT_NAME` the URL is `docker-amp-template.localhost`.
 
 ## Backup
-
-Version 3.3.0 added support for defining and running automatic backups for defined services.
 
 Backups are executed **once** per every `docker compose up` or by running `docker compose up backup` on demand and can be turned off by setting `BACKUP_ENABLED` in `.env` to any other value that `true`.
 
