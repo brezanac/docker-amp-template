@@ -204,3 +204,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Removed
 
 - removed `INSTALL_COMPLETE_TZDATA` support since `tzdata` is now mandatory for all images
+
+## [3.7.1] - 2023-05-03
+
+### Changed
+
+- fixed the issue with host.docker.internal not being available in the running containers

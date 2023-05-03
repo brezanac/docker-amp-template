@@ -19,6 +19,8 @@ services:
         networks:
             - private
             - public
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         volumes:
             - "./apache/apache2.conf:/etc/apache2/apache2.conf:delegated"
             - "${DOCUMENT_ROOT_HOST_PATH}:${DOCUMENT_ROOT_CONTAINER_PATH}:delegated"
@@ -42,6 +44,8 @@ services:
             - apache
         networks:
             - private
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         volumes:
             - "./php-fpm/xdebug-cli.ini:/etc/php/${PHP_FPM_VERSION}/cli/conf.d/zzzz_xdebug.ini:delegated"
             - "./php-fpm/php-cli.ini:/etc/php/${PHP_FPM_VERSION}/cli/conf.d/zzzz_custom.ini:delegated"
@@ -62,6 +66,8 @@ services:
         networks:
             - private
             - public
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         ports:
             - published: "${MARIADB_PUBLISHED_PORT}"
               target: 3306
