@@ -177,7 +177,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - added healthcheck criteria for the mariadb service to aid the `backup` service
 
-## [3.4.0]] - 2023-03-23
+## [3.4.0] - 2023-03-23
 
 ### Changed
 
