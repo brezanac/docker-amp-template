@@ -210,3 +210,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - fixed the issue with host.docker.internal not being available in the running containers
+
+## [3.7.2] - 2024-01-06
+
+### Changed
+
+- fixed the incompatibility with the old V1 Docker Compose API
